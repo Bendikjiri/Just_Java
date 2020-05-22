@@ -11,9 +11,8 @@ package com.example.justjava;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
-
-import java.text.NumberFormat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,6 +21,10 @@ import androidx.appcompat.app.AppCompatActivity;
  */
 public class MainActivity extends AppCompatActivity {
 
+    int quantity = 0;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,26 +32,75 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * This method is called when the plus button is clicked.
+     */
+    public void increment(View view) {
+        quantity = quantity + 1;
+        displayQuantity(quantity);
+    }
+
+    /**
+     * This method is called when the minus button is clicked.
+     */
+    public void decrement(View view) {
+        quantity = quantity - 1;
+        displayQuantity(quantity);
+    }
+
+    /**
      * This method is called when the order button is clicked.
      */
     public void submitOrder(View view) {
-        display(2);
-        displayPrice(2 * 5);
+        CheckBox whipedCreamCheckBox = (CheckBox) findViewById(R.id.whipped_cream_checkbox);
+        Boolean hasWhippedCream = whipedCreamCheckBox.isChecked();
+
+        CheckBox chocolateCheckBox = (CheckBox) findViewById(R.id.chocolate_checkbox);
+        Boolean hasChocolate = chocolateCheckBox.isChecked();
+
+        int price = calculatePrice();
+        String priceMessage = createOrderSummary(price, hasWhippedCream, hasChocolate);
+        displayMessage(createOrderSummary(price, hasWhippedCream, hasChocolate));
     }
 
     /**
-     * This method displays the given price on the screen.
+     * This method calculate the price.
+     * @return price
      */
-    private void displayPrice(int number) {
-        TextView priceTextView = (TextView) findViewById(R.id.price_text_view);
-        priceTextView.setText(NumberFormat.getCurrencyInstance().format(number));
+
+    private int calculatePrice() {
+        return quantity * 6;
+           }
+
+    /**
+     * This method create order summary
+     */
+    private String createOrderSummary(int price, boolean hasWhippedCream, boolean hasChocolate) {
+        String priceMessage = "Name: Jirka Syrka";
+        priceMessage += "\nAdd whiped cream?" + hasWhippedCream;
+        priceMessage += "\nAdd chocolate?" + hasChocolate;
+        priceMessage += "\nQuantity: " + quantity;
+        priceMessage += "\nTotal $" + price;
+        priceMessage += "\nThank you!";
+        return priceMessage;
     }
+
 
     /**
      * This method displays the given quantity value on the screen.
+     * @param
      */
-    private void display(int number) {
+    private void displayQuantity(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + number);
     }
+
+    /**
+     * This method displays the given text on the screen.
+     */
+    private void displayMessage(String message) {
+        TextView orderSummaryTextView = (TextView) findViewById(R.id.order_summary_text_view);
+        orderSummaryTextView.setText(message);
+     }
 }
+
+
